@@ -1,19 +1,27 @@
 {
   "name": "magic-chess",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KingJulian13/magic-chess.git"
+  "dependencies": {
+    "chess.js": "^1.0.0-beta.6",
+    "chessground": "^8.3.13",
+    "pinia": "^2.1.4",
+    "vue": "^3.3.4"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/KingJulian13/magic-chess/issues"
-  },
-  "homepage": "https://github.com/KingJulian13/magic-chess#readme"
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.3.2",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-vue": "^9.15.1",
+    "prettier": "^3.0.0",
+    "vite": "^4.4.6"
+  }
 }
