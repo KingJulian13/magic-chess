@@ -1,5 +1,5 @@
 import { SQUARES } from 'chess.js';
-
+import { isSpellOnSquare } from "@/src/game/index.js"
 //src/assets/test.svg
 import customSvg from '@/src/assets/svg2.js'
 
@@ -20,20 +20,18 @@ export function toColor(chess) {
 export function playOtherSide(board, chess) {
     return (orig, dest) => {
         chess.move({ from: orig, to: dest });
-        board.setShapes([
-            { orig: dest, brush: 'red', customSvg }
-        ]);
-        // block board from inputs for 4 seconds
-        board.set({ movable: { color: undefined } })
-        setTimeout(() => {
-            board.set({
-                turnColor: toColor(chess),
-                movable: {
-                    color: toColor(chess),
-                    dests: toDests(chess)
-                }
-            });
-        }, 4000)
+        // board.setShapes([
+        //     { orig: dest, brush: 'red', customSvg }
+        // ]);
+
+        board.set({
+            turnColor: toColor(chess),
+            movable: {
+                color: toColor(chess),
+                dests: toDests(chess)
+            }
+        });
+
     };
 }
 
@@ -55,4 +53,21 @@ export function aiPlay(board, chess, delay, firstMove) {
             board.playPremove();
         }, delay);
     };
+}
+
+
+export function getRandomEmptySquare(chess) {
+    let square = getRandomSquare()
+    while (chess.get(square) !== false || isSpellOnSquare(square)) {
+        square = getRandomSquare()
+    }
+    return square
+}
+
+
+
+export function getRandomSquare() {
+    const randomAtoH = 'abcdefgh'[Math.floor(Math.random() * 8)]
+    const random1to8 = Math.floor(Math.random() * 8) + 1
+    return `${randomAtoH}${random1to8}`
 }

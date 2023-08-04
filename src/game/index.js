@@ -1,11 +1,25 @@
 import { Chess } from 'chess.js'
 import { Chessground } from 'chessground'
-import { playOtherSide, toDests, toColor } from './util'
+import { toDests, toColor } from './util'
+import { ANIMATION_FRAME } from "@/src/game/variables.js"
 
 export let chess = new Chess()
 export let board = null
 
-let spells = new Map()
+const spells = new Map()
+
+export function isSpellOnSquare(key) {
+    return spells.has(key)
+}
+
+
+let boardListeners = new Map(
+    [
+        ["drawChange", []],
+        ["afterMove", []],
+        ["afterNewPiece", []],
+    ]
+)
 
 export function init(el) {
     const config = {
@@ -13,6 +27,9 @@ export function init(el) {
             color: 'white',
             free: false,
             dests: toDests(chess)
+        },
+        animation: {
+            duration: ANIMATION_FRAME,
         },
         draggable: {
             showGhost: true
@@ -25,15 +42,94 @@ export function init(el) {
         },
     }
     board = Chessground(el, config)
+    registerListener("afterMove", onPlayerMove)
+
+    /** Map listeners */
     board.set({
-        movable: { events: { after: playOtherSide(board, chess) } }
+        movable: {
+            events: {
+                after: getListenerFn("afterMove"),
+                afterNewPiece: getListenerFn("afterNewPiece")
+            }
+        }
     })
 }
 
 export function undo() {
-    chess.undo()
+    // Must manually save the state of the board
+    // chess.undo()
+    // updateBoard()
+}
+
+export function addSpell(spell, key) {
+    console.log("adding spell", spell, key)
+    spell.key = key
+    if (spells.has(spell.key)) {
+        spells.get(spell.key).push(spell)
+    } else {
+        spells.set(spell.key, [spell])
+    }
+    updateSpells()
+}
+
+export function removeSpell(spell) {
+    if (spells.has(spell.key)) {
+        const arr = spells.get(spell.key)
+        const index = arr.indexOf(spell)
+        if (index > -1) {
+            arr.splice(index, 1)
+        }
+    }
+    updateSpells()
+}
+
+export function updateSpells() {
+    const custom = new Map()
+    spells.forEach((arr, key) => {
+        custom.set(key, arr.map(spell => spell.getClass()).join(" "))
+    })
     board.set({
-        fen: chess.fen(),
+        highlight: {
+            custom: custom // must be map of format: <key, classString>
+        }
+    })
+}
+export function registerListener(event, listener) {
+    if (boardListeners.has(event)) {
+        boardListeners.get(event).push(listener)
+    } else {
+        boardListeners.set(event, [listener])
+    }
+    return listener
+}
+
+export function unregisterListener(event, listener) {
+    if (boardListeners.has(event)) {
+        const arr = boardListeners.get(event)
+        const index = arr.indexOf(listener)
+        if (index > -1) {
+
+            arr.splice(index, 1)
+        }
+    }
+}
+
+export function onClickOnBoard(player, event) {
+    const x = event.clientX
+    const y = event.clientY
+    const key = board.getKeyAtDomPos([x, y])
+    if (!key) return
+    console.debug(`${player.name} clicked ${key}`)
+    const selectedItem = player.selectedItem
+    if (!selectedItem) return
+    console.debug(`${player.name} is trying to place ${selectedItem} to ${key}`)
+    addSpell(selectedItem, key)
+    player.removeItems(selectedItem)
+
+}
+
+export function updateBoard() {
+    board.set({
         turnColor: toColor(chess),
         movable: {
             color: toColor(chess),
@@ -42,37 +138,16 @@ export function undo() {
     })
 }
 
-export function addSpell(key, spell) {
-    spells.set(key, spell)
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === "childList") {
-                if (mutation.addedNodes[0]?.className === spell) {
-                    handleNewSpell(mutation.addedNodes[0])
-                    observer.disconnect();
-                }
-            }
-        });
-    });
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: false,
-        characterData: false,
-    });
-    board.set({
-        highlight: {
-            custom: spells
-        }
-    })
-}
+function onPlayerMove(orig, dest) {
+    chess.move({ from: orig, to: dest });
+    updateBoard()
+};
 
-function handleNewSpell(el) {
-    console.log("do stuff on el:", el)
-    const x = el.getBoundingClientRect().x
-    const y = el.getBoundingClientRect().y
-    const width = el.getBoundingClientRect().width
-    const height = el.getBoundingClientRect().height
-    console.log("x:", x, "y:", y, "width:", width, "height:", height)
-    
+function getListenerFn(key) {
+    const listeners = boardListeners.get(key)
+    return function () {
+        listeners.forEach(listener => {
+            listener.call(null, ...arguments)
+        })
+    }
 }

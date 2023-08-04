@@ -1,12 +1,15 @@
 <script setup>
-import ChessBoard from './components/ChessBoard.vue'
+import ChessGame from './components/ChessGame.vue'
 </script>
 
 <template>
   <main>
-    <ChessBoard />
+    <ChessGame />
   </main>
 </template>
 
 <style scoped>
+main {
+ width: 100%
+}
 </style>
