@@ -3,14 +3,14 @@
     <p>Players Inventory</p>
     <div class="player-inventory__items">
       <div v-for="item in player.items" :key="item.id">
-        <PlayerItem :item="item" @select="onSelect" :selected="isSelected(item)" />
+        <PlayerItem class="h-full" :item="item" @select="onSelect" :selected="isSelected(item)" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Player from '@/src/game/Player.js'
+import Player from '@/src/game/Players.js'
 import PlayerItem from './PlayerItem.vue'
 
 export default {
@@ -38,7 +38,6 @@ export default {
 .player-inventory__items {
   display: flex;
   gap: 8px;
-  border: 1px solid grey;
   padding: 4px;
 }
 

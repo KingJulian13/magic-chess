@@ -3,14 +3,21 @@ import Board from '@/src/game/Board.js'
 export default class Item {
   constructor(type) {
     this.key = null // set if item is on board
-    this.type = type 
+    this.isPrivate = false // only visible to owner
+    this.name = 'Item'
+    this.description = 'Item description with some text and stuff to describe the item.'
+    this.effect = 'Effect'
+    this.type = type
     this.domEl = null
     this.player = null
     this.#addMutationObserver()
   }
 
-  getClass() {
+  renderClass() {
     return this.type
+  }
+  renderHoverClass() {
+    return this.type + '-hover'
   }
 
   onBoardMove(orig, dest, meta) {
@@ -24,12 +31,13 @@ export default class Item {
 
   onFigureEnter() {}
   onFigureLeave() {}
+  addToBoard(key) {
+    this.key = key
+  }
 
   destroy() {
     Board.removeItem(this)
-    Board.unregisterListener('afterMove', this.listener)
     Board.updateItems()
-    console.debug(`Item ${this.constructor.name} destroyed`)
   }
 
   /**
@@ -40,7 +48,7 @@ export default class Item {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
-          if (mutation.addedNodes[0]?.className === this.getClass()) {
+          if (mutation.addedNodes[0]?.className === this.renderClass()) {
             this.domEl = mutation.addedNodes[0]
             observer.disconnect()
           }

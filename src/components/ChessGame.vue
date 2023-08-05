@@ -2,18 +2,22 @@
   <div class>
     <div class="game">
       <div class="game__actions">
-        <button @click="addTornado(player2)">Add Tornado to inventory</button>
+        <Btn @click="addTornado(player2)">Add Tornado to inv</Btn>
+        <Btn @click="addPortal(player2)">Add Portal to inv</Btn>
+        <Btn @click="addHiddenPortal(player2)">Add Hidden Portal to inv</Btn>
       </div>
       <PlayerInventory :player="player2" />
 
       <ChessBoard />
       <div class="game__actions">
-        <button @click="addItem">Add Portal</button>
+        <Btn @click="addItem">Add Portal</Btn>
       </div>
 
       <PlayerInventory :player="player1" />
       <div class="game__actions">
-        <button @click="addTornado(player1)">Add Tornado to inventory</button>
+        <Btn @click="addTornado(player1)">Add Tornado to inv</Btn>
+        <Btn @click="addPortal(player1)">Add Portal to inv</Btn>
+        <Btn @click="addHiddenPortal(player1)">Add Hidden Portal to inv</Btn>
       </div>
     </div>
   </div>
@@ -22,21 +26,25 @@
 <script>
 import ChessBoard from './ChessBoard.vue'
 import PlayerInventory from './PlayerInventory.vue'
+import Btn from './base/Btn.vue'
 
 import Board from '@/src/game/Board.js'
-import { Tornado, Portal } from '@/src/game/items'
-import Player from '@/src/game/Player.js'
+import { Tornado, Portal, HiddenPortal } from '@/src/game/items'
+import { player1, player2 } from '@/src/game/Players.js'
 
 export default {
   name: 'ChessGame',
   components: {
     ChessBoard,
-    PlayerInventory
+    PlayerInventory,
+    Btn
   },
-  data: () => ({
-    player1: new Player('Fredmann'),
-    player2: new Player('Mannfred')
-  }),
+  data() {
+    return {
+      player1,
+      player2
+    }
+  },
   methods: {
     addItem() {
       const square1 = Board.getRandomEmptySquare()
@@ -50,6 +58,12 @@ export default {
     },
     addTornado(player) {
       player.addItem(new Tornado())
+    },
+    addPortal(player) {
+      player.addItem(new Portal())
+    },
+    addHiddenPortal(player) {
+      player.addItem(new HiddenPortal())
     }
   }
 }

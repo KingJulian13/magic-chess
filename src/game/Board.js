@@ -104,7 +104,12 @@ class Board {
     const y = event.clientY
     const key = this.#board.getKeyAtDomPos([x, y])
     if (!key) return
-    this.#getListenerFn('click')(key, event)
+    const currentPlayer = Chess.getCurrentPlayer()
+    if (currentPlayer.selectedItem) {
+      this.addItem(currentPlayer.selectedItem, key)
+      currentPlayer.selectedItem = null
+    }
+    // this.#getListenerFn('click')(key, event)
   }
 
   handleHover(e) {
@@ -116,7 +121,8 @@ class Board {
   }
 
   addItem(item, key) {
-    item.key = key
+    console.log(item, item - key)
+    item.addToBoard(key)
     if (this.items.has(key)) {
       this.items.get(key).push(item)
     } else {
@@ -139,7 +145,7 @@ class Board {
   updateItems() {
     const custom = new Map()
     this.items.forEach((arr, key) => {
-      custom.set(key, arr.map((item) => item.getClass()).join(' '))
+      custom.set(key, arr.map((item) => item.renderClass()).join(' '))
     })
     this.#board.set({
       highlight: {

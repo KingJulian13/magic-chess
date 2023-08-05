@@ -1,11 +1,10 @@
 import Item from './Item.js'
 import { ANIMATION_FRAME } from '@/src/game/variables.js'
 import Board from '@/src/game/Board.js'
-import LinkedPortal from './LinkedPortal.js'
 
 export let count = 0
 
-export default class Portal extends Item {
+export default class LinkedPortal extends Item {
   constructor() {
     if (count > 11) {
       throw new Error('Too many portals')
@@ -28,11 +27,6 @@ export default class Portal extends Item {
 
   addToBoard(key) {
     super.addToBoard(key)
-    const linkedKey = Board.getRandomEmptySquare()
-    this.linkedPortal = new LinkedPortal()
-    this.linkedPortal.key = linkedKey
-    this.linkedPortal.linkToPortal = this
-    Board.addItem(this.linkedPortal)
   }
 
   onFigureEnter(orig) {

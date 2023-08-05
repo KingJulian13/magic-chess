@@ -1,6 +1,6 @@
 import { Chess as ChessJS } from 'chess.js'
 import { SQUARES } from 'chess.js'
-
+import { player1, player2 } from '@/src/game/Players.js'
 class Chess {
   #chess = new ChessJS()
 
@@ -29,6 +29,10 @@ class Chess {
 
   getFen() {
     return this.#chess.fen()
+  }
+
+  getCurrentPlayer() {
+    return this.#chess.turn() === 'w' ? player1 : player2
   }
 
   move(from, to, force = false) {
