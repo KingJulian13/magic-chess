@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Player from '@/src/game/player.js'
+import Player from '@/src/game/Player.js'
 import PlayerItem from './PlayerItem.vue'
 
 export default {

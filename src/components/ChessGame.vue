@@ -25,7 +25,7 @@ import PlayerInventory from './PlayerInventory.vue'
 
 import Board from '@/src/game/Board.js'
 import { Tornado, Portal } from '@/src/game/items'
-import Player from '@/src/game/player.js'
+import Player from '@/src/game/Player.js'
 
 export default {
   name: 'ChessGame',
