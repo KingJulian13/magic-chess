@@ -10,6 +10,6 @@ import ChessGame from './components/ChessGame.vue'
 
 <style scoped>
 main {
- width: 100%
+  width: 100%;
 }
 </style>

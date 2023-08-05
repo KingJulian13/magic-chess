@@ -1,21 +1,26 @@
 <template>
-  <div class="blue merida">
-    <div ref="board" class="cg-board-wrap"></div>
+  <div>
+    <div ref="board" @click="onClickBoard" @mouseover="onHoverBoard" class="cg-board-wrap"></div>
   </div>
 </template>
 
 <script>
-import { init } from '@/src/game/index.js'
-
+import Board from '@/src/game/Board.js'
 export default {
   name: 'ChessBoard',
   mounted() {
-    init(this.$refs.board)
+    Board.init(this.$refs.board)
   },
+  methods: {
+    onClickBoard(e) {
+      Board.handleClick(e)
+    },
+    onHoverBoard(e) {
+      Board.handleHover(e)
+    }
+  }
 }
 </script>
-
-
 
 <style scoped>
 .cg-board-wrap {

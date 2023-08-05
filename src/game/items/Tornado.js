@@ -1,6 +1,6 @@
-import Spell from "./Spell.js"
+import Item from "./Item.js"
 
-export default class Tornado extends Spell {
+export default class Tornado extends Item {
     /** color: blue or red */
     constructor() {
         super(`tornado`)

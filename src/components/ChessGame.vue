@@ -6,9 +6,9 @@
       </div>
       <PlayerInventory :player="player2" />
 
-      <ChessBoard @click="onClickBoard" />
+      <ChessBoard />
       <div class="game__actions">
-        <button @click="addSpell">Add Portal</button>
+        <button @click="addItem">Add Portal</button>
       </div>
 
       <PlayerInventory :player="player1" />
@@ -22,10 +22,9 @@
 <script>
 import ChessBoard from './ChessBoard.vue'
 import PlayerInventory from './PlayerInventory.vue'
-import { chess, addSpell, onClickOnBoard } from '@/src/game/index.js'
-import { getRandomEmptySquare } from '@/src/game/util.js'
-import Portal from '@/src/game/spells/Portal.js'
-import Tornado from '@/src/game/spells/Tornado.js'
+
+import Board from '@/src/game/board.js'
+import { Tornado, Portal } from '@/src/game/items'
 import Player from '@/src/game/player.js'
 
 export default {
@@ -39,28 +38,22 @@ export default {
     player2: new Player('Mannfred')
   }),
   methods: {
-    addSpell() {
-      const square1 = getRandomEmptySquare(chess)
+    addItem() {
+      const square1 = Board.getRandomEmptySquare()
       const redPortal = new Portal()
-      addSpell(redPortal, square1)
-      const square2 = getRandomEmptySquare(chess)
+      Board.addItem(redPortal, square1)
+      const square2 = Board.getRandomEmptySquare()
       const bluePortal = new Portal()
       bluePortal.setLinkedPortal(redPortal)
       redPortal.setLinkedPortal(bluePortal)
-      addSpell(bluePortal, square2)
+      Board.addItem(bluePortal, square2)
     },
     addTornado(player) {
       player.addItem(new Tornado())
-    },
-    onClickBoard(e) {
-      console.log(1)
-      onClickOnBoard(this.player1, e)
     }
   }
 }
 </script>
-
-
 
 <style scoped>
 .game__actions {
