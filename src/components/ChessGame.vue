@@ -23,7 +23,7 @@
 import ChessBoard from './ChessBoard.vue'
 import PlayerInventory from './PlayerInventory.vue'
 
-import Board from '@/src/game/board.js'
+import Board from '@/src/game/Board.js'
 import { Tornado, Portal } from '@/src/game/items'
 import Player from '@/src/game/player.js'
 
