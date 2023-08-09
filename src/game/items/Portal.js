@@ -22,17 +22,16 @@ export default class Portal extends Item {
   renderClass() {
     return `${this.type} portal-${this.count}`
   }
+
   renderHoverClass() {
     return 'portal-hover'
   }
 
-  addToBoard(key) {
-    super.addToBoard(key)
+  onAddedToBoard(key) {
+    super.onAddedToBoard(key)
     const linkedKey = Board.getRandomEmptySquare()
-    this.linkedPortal = new LinkedPortal()
-    this.linkedPortal.key = linkedKey
-    this.linkedPortal.linkToPortal = this
-    Board.addItem(this.linkedPortal)
+    this.linkedPortal = new LinkedPortal(this)
+    Board.addItem(this.linkedPortal, linkedKey)
   }
 
   onFigureEnter(orig) {

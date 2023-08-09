@@ -40,6 +40,7 @@ class Chess {
       this.#chess.move({ from, to })
     } else {
       const { type, color } = this.#chess.get(from)
+      if (!type) return
       this.#chess.remove(from)
       this.#chess.put({ type, color }, to)
     }

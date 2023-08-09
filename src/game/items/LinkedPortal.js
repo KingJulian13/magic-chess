@@ -5,28 +5,25 @@ import Board from '@/src/game/Board.js'
 export let count = 0
 
 export default class LinkedPortal extends Item {
-  constructor() {
-    if (count > 11) {
-      throw new Error('Too many portals')
-    }
+  constructor(linkedPortal) {
     super('portal')
+    this.linkedPortal = linkedPortal
     this.image = new URL(`../../assets/items/portal.jpg`, import.meta.url)
     this.name = 'Portal'
-    this.description = 'Portal description with some text and stuff to describe the item.'
-    this.effect = 'Creates Portal from selected positon to another random free position.'
     this.count = count
     count += 1
+  }
+
+  onAddedToBoard(key) {
+    super.onAddedToBoard(key)
   }
 
   renderClass() {
     return `${this.type} portal-${this.count}`
   }
+
   renderHoverClass() {
     return 'portal-hover'
-  }
-
-  addToBoard(key) {
-    super.addToBoard(key)
   }
 
   onFigureEnter(orig) {

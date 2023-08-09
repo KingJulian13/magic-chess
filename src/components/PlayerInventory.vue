@@ -1,11 +1,12 @@
 <template>
   <div class="player-inventory">
     <p>Players Inventory</p>
-    <div class="player-inventory__items">
-      <div v-for="item in player.items" :key="item.id">
+
+    <TransitionGroup name="inventory" tag="div" class="player-inventory__items">
+      <div v-for="item in items" :key="item.id">
         <PlayerItem class="h-full" :item="item" @select="onSelect" :selected="isSelected(item)" />
       </div>
-    </div>
+    </TransitionGroup>
   </div>
 </template>
 
@@ -22,7 +23,11 @@ export default {
       required: true
     }
   },
-  computed: {},
+  computed: {
+    items() {
+      return this.player.items
+    }
+  },
   methods: {
     onSelect(item) {
       this.player.selectItem(item)
@@ -39,9 +44,24 @@ export default {
   display: flex;
   gap: 8px;
   padding: 4px;
+  height: 411px;
 }
 
 .player-inventory {
   padding: 8px 0px;
+}
+
+.inventory-enter-active,
+.inventory-leave-active {
+  transition: all 0.5s ease;
+}
+
+.inventory-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.inventory-leave-to {
+  opacity: 0;
+  transform: translateY(-60px);
 }
 </style>

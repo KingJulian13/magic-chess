@@ -107,7 +107,7 @@ class Board {
     const currentPlayer = Chess.getCurrentPlayer()
     if (currentPlayer.selectedItem) {
       this.addItem(currentPlayer.selectedItem, key)
-      currentPlayer.selectedItem = null
+      currentPlayer.removeItem(currentPlayer.selectedItem)
     }
     // this.#getListenerFn('click')(key, event)
   }
@@ -121,8 +121,7 @@ class Board {
   }
 
   addItem(item, key) {
-    console.log(item, item - key)
-    item.addToBoard(key)
+    item.onAddedToBoard(key)
     if (this.items.has(key)) {
       this.items.get(key).push(item)
     } else {
@@ -164,6 +163,57 @@ class Board {
       square = getRandomSquare()
     }
     return square
+  }
+
+  /**
+   * Returns a random square in a given square radius around the given key.
+   * Does not overlap with borders. (e.g. if radius is 1, it will not return a square outside the board)
+   * Uses string parsing and manuel calculation to avoid using a loop.
+   * @param {string} key - key string of the square - format: 'a1'
+   * @param {number} radius - radius around the given square (in squares)
+   */
+  getRandomSquareInRadius(key, radius = 1) {
+    const [file, rank] = key.split('')
+    const fileIndex = file.charCodeAt(0) - 97
+    const rankIndex = parseInt(rank) - 1
+    const minFile = Math.max(0, fileIndex - radius)
+    const maxFile = Math.min(7, fileIndex + radius)
+    const minRank = Math.max(0, rankIndex - radius)
+    const maxRank = Math.min(7, rankIndex + radius)
+    const newFile = String.fromCharCode(
+      Math.floor(Math.random() * (maxFile - minFile + 1)) + minFile + 97
+    )
+    const newRank = Math.floor(Math.random() * (maxRank - minRank + 1)) + minRank + 1
+    return `${newFile}${newRank}`
+  }
+
+  /**
+   * Returns a random empty square in a given square radius around the given key.
+   * Does not overlap with borders. (e.g. if radius is 1, it will not return a square outside the board)
+   * Uses string parsing and manuel calculation to avoid using a loop.
+   * Returns null if no empty square was found.
+   * @param {string} key - key string of the square - format: 'a1'
+   * @param {number} radius - radius around the given square (in squares)
+   */
+  getRandomEmptySquareInRadius(key, radius = 1) {
+    const [file, rank] = key.split('')
+    const fileIndex = file.charCodeAt(0) - 97
+    const rankIndex = parseInt(rank) - 1
+    const minFile = Math.max(0, fileIndex - radius)
+    const maxFile = Math.min(7, fileIndex + radius)
+    const minRank = Math.max(0, rankIndex - radius)
+    const maxRank = Math.min(7, rankIndex + radius)
+    const emptySquares = []
+    for (let i = minFile; i <= maxFile; i++) {
+      for (let j = minRank; j <= maxRank; j++) {
+        const square = `${String.fromCharCode(i + 97)}${j + 1}`
+        if (Chess.getFigureAt(square) === false && !this.isItemOnSquare(square)) {
+          emptySquares.push(square)
+        }
+      }
+    }
+    if (emptySquares.length === 0) return null
+    return emptySquares[Math.floor(Math.random() * emptySquares.length)]
   }
 
   #getListenerFn(key) {

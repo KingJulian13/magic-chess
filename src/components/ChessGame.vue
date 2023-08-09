@@ -48,13 +48,8 @@ export default {
   methods: {
     addItem() {
       const square1 = Board.getRandomEmptySquare()
-      const redPortal = new Portal()
-      Board.addItem(redPortal, square1)
-      const square2 = Board.getRandomEmptySquare()
-      const bluePortal = new Portal()
-      bluePortal.setLinkedPortal(redPortal)
-      redPortal.setLinkedPortal(bluePortal)
-      Board.addItem(bluePortal, square2)
+      const portal = new Portal()
+      Board.addItem(portal, square1)
     },
     addTornado(player) {
       player.addItem(new Tornado())

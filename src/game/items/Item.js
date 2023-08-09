@@ -1,7 +1,8 @@
 import Board from '@/src/game/Board.js'
-
+import { getId } from '@/src/game/util.js'
 export default class Item {
   constructor(type) {
+    this.id = getId() // random number
     this.key = null // set if item is on board
     this.isPrivate = false // only visible to owner
     this.name = 'Item'
@@ -31,7 +32,7 @@ export default class Item {
 
   onFigureEnter() {}
   onFigureLeave() {}
-  addToBoard(key) {
+  onAddedToBoard(key) {
     this.key = key
   }
 
