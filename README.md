@@ -1,6 +1,8 @@
-# magic-chess
+# Magic Chess
 
-This template should help get you started developing with Vue 3 in Vite.
+A basic private playground project. 
+
+Creating a chess game in JS + Vue3 with Chess.js and Chessboard.js as base-libraries.
 
 ## Recommended IDE Setup
 
